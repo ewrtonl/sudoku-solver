@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+
+  background: #3e3e3e;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+h2 {
+  font-size: 30px;
+}
+
+.sudoku-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  text-align: center;
+}
+
+.sudoku-box-row {
+  display: flex;
+  gap: 10px;
+}
+
+.block-green {
+  width: 78px;
+  height: 78px;
+  padding: 27px;
+  border-radius: 5px;
+  background: #9cffc9;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+.block-red {
+  width: 78px;
+  height: 78px;
+  border-radius: 5px;
+  background: #ffb59c;
+  box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+}
+
+button {
+  border: none;
+  padding: 15px 50px;
+  border-radius: 40px;
+  background: #9cffc9;
+  font-size: 19px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: scale(1.1);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 30%;
+}
+
+.head h4 {
+    font-size: 20px;
+    color: #9cffc9;
+}
+
+.time {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-size: 20px;
+    color: white;
+    letter-spacing: 2px;
+}
+
+.time .clock {
+    width: 25px;
+}
+
+.back-button img{
+    width: 28px;
+}
+
+.back-button {
+    cursor: pointer;
+    transition: .2s;
+}
+
+.back-button:hover {
+    transform: translateX(-5px);
+}
