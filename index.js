@@ -101,8 +101,6 @@ class Tabuleiro{
         for (let linha = 0; linha < 9; linha++) {
             for (let coluna = 0; coluna < 9; coluna++) {
                 if (this.tabuleiro[linha][coluna].cor == 0) {
-                    if (linha == 5 && coluna == 8) {
-                    }
                     return this.tabuleiro[linha][coluna];//retorna o vertice cuja cor é nula
                 }
             }
