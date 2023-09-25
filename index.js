@@ -169,3 +169,4 @@ document.getElementById("solve-button").addEventListener("click", () => {
 
 // Carrega o tabuleiro no início
 tabuleiro.carregaTabuleiro();
+carregarTabuleiro();
