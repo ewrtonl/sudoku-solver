@@ -129,3 +129,43 @@ class Tabuleiro{
         return false;//Jogador perdeu
     }
 }
+
+const tabuleiro = new Tabuleiro();
+
+// Função para carregar o tabuleiro no HTML
+function carregarTabuleiro() {
+    const grid = document.getElementById("sudoku-grid");
+    for (let i = 0; i < 9; i++) {
+        const row = document.createElement("tr");
+        for (let j = 0; j < 9; j++) {
+            const cell = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "number";
+            input.min = 1;
+            input.max = 9;
+            input.value = tabuleiro.tabuleiro[i][j].cor;
+            input.addEventListener("input", () => {
+                tabuleiro.alteraCelula(i, j, parseInt(input.value));
+            });
+            cell.appendChild(input);
+            row.appendChild(cell);
+        }
+        grid.appendChild(row);
+    }
+}
+
+// Função para resolver o Sudoku quando o botão é clicado
+document.getElementById("solve-button").addEventListener("click", () => {
+    const grid = document.getElementById("sudoku-grid");
+    while (grid.firstChild) {
+        grid.removeChild(grid.firstChild);
+    }
+    if (tabuleiro.backtracking()) {
+        carregarTabuleiro(); // Atualiza o tabuleiro com a solução
+    } else {
+        alert("Não foi possível encontrar uma solução válida.");
+    }
+});
+
+// Carrega o tabuleiro no início
+tabuleiro.carregaTabuleiro();
