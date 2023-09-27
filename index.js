@@ -1,3 +1,5 @@
+import { iniciarTimer, pararTimer } from "./timer.js";
+
 class Vertice{
     constructor(cor) {
         this.loc = [-1, -1]//posicao do vertice no tabuleiro
@@ -131,6 +133,7 @@ class Tabuleiro{
 }
 
 const tabuleiro = new Tabuleiro();
+iniciarTimer()
 
 // Função para carregar o tabuleiro no HTML
 function carregarTabuleiro() {
@@ -143,10 +146,20 @@ function carregarTabuleiro() {
             input.type = "number";
             input.min = 1;
             input.max = 9;
-            input.value = tabuleiro.tabuleiro[i][j].cor;
+            input.maxLength = 1;
+            input.value = tabuleiro.tabuleiro[i][j].cor ? tabuleiro.tabuleiro[i][j].cor : '';
             input.addEventListener("input", () => {
-                tabuleiro.alteraCelula(i, j, parseInt(input.value));
+                if (input.value.length > 1) {
+                    input.value = input.value.slice(0, 1);
+                }
+                tabuleiro.alteraCelula(i, j, parseInt(input.value) ? parseInt(input.value) : 0);
             });
+
+            if (i % 3 === 2) cell.style.borderBottom = "3px solid #e7e7e7";
+            if (j % 3 === 2) cell.style.borderRight = "3px solid #e7e7e7";
+            if (i % 3 === 0) cell.style.borderTop = "3px solid #e7e7e7";
+            if (j % 3 === 0) cell.style.borderLeft = "3px solid #e7e7e7";
+
             cell.appendChild(input);
             row.appendChild(cell);
         }
@@ -154,14 +167,20 @@ function carregarTabuleiro() {
     }
 }
 
+
 // Função para resolver o Sudoku quando o botão é clicado
-document.getElementById("solve-button").addEventListener("click", () => {
+const solveButton = document.getElementById("solve-button")
+const sucessBox = document.getElementById("sucess-box")
+solveButton.addEventListener("click", () => {
     const grid = document.getElementById("sudoku-grid");
     while (grid.firstChild) {
         grid.removeChild(grid.firstChild);
     }
     if (tabuleiro.backtracking()) {
-        carregarTabuleiro(); // Atualiza o tabuleiro com a solução
+        carregarTabuleiro(); 
+        solveButton.classList.add('hide')
+        sucessBox.classList.remove('hide')
+        pararTimer()
     } else {
         alert("Não foi possível encontrar uma solução válida.");
     }
@@ -170,3 +189,7 @@ document.getElementById("solve-button").addEventListener("click", () => {
 // Carrega o tabuleiro no início
 tabuleiro.carregaTabuleiro();
 carregarTabuleiro();
+
+document.getElementById("reload-button").addEventListener("click", () => {
+    window.location.reload(true);
+})
