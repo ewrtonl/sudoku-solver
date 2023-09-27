@@ -1,195 +1,221 @@
-import { iniciarTimer, pararTimer } from "./timer.js";
+import { iniciarTimer, pararTimer } from './timer.js';
 
-class Vertice{
-    constructor(cor) {
-        this.loc = [-1, -1]//posicao do vertice no tabuleiro
-        this.cor = cor//cor [valor de 1 até 9] que ele assumirá no tabuleiro
-        this.adj = [];//array que armazena referências de objetos adjacentes ao vertice
-    }
-    setColor(cor) {
-        this.cor = cor;
-    }
-    setLoc(linha, coluna) {
-        this.loc[0] = linha;
-        this.loc[1] = coluna;
-    }
+class Vertice {
+  constructor(cor) {
+    this.loc = [-1, -1]; //posicao do vertice no tabuleiro
+    this.cor = cor; //cor [valor de 1 até 9] que ele assumirá no tabuleiro
+    this.adj = []; //array que armazena referências de objetos adjacentes ao vertice
+  }
+  setColor(cor) {
+    this.cor = cor;
+  }
+  setLoc(linha, coluna) {
+    this.loc[0] = linha;
+    this.loc[1] = coluna;
+  }
 }
-class Grafo{
-    constructor(){
-        this.vg = [];//Conjunto V(G)
-    }
-    addVertice(cor) {
-        let v = new Vertice(cor);
-        this.vg.push(v);
-        return v;
-    }
-    addAresta(vertice1, vertice2){
-        vertice1.adj.push(vertice2);
-    }
-
+class Grafo {
+  constructor() {
+    this.vg = []; //Conjunto V(G)
+  }
+  addVertice(cor) {
+    let v = new Vertice(cor);
+    this.vg.push(v);
+    return v;
+  }
+  addAresta(vertice1, vertice2) {
+    vertice1.adj.push(vertice2);
+  }
 }
 
-class Tabuleiro{
-    constructor() {
-        this.grafo = new Grafo();//tabuleiro possui um grafo para armazenar as relações de adjacência
-        this.tabuleiro = [];
-        
+class Tabuleiro {
+  constructor() {
+    this.grafo = new Grafo(); //tabuleiro possui um grafo para armazenar as relações de adjacência
+    this.tabuleiro = [];
+  }
+  carregaTabuleiro() {
+    //cria os vertices e as relações de adjacência entre eles
+    for (let i = 0; i < 9; i++) {
+      this.tabuleiro.push([]);
+      for (let j = 0; j < 9; j++) {
+        let vertice = this.grafo.addVertice(0);
+        vertice.setLoc(i, j);
+        this.tabuleiro[i].push(vertice); //inicializa o tabuleiro com valores nulos
+      }
     }
-    carregaTabuleiro(){//cria os vertices e as relações de adjacência entre eles
-        for (let i = 0; i < 9 ; i++){
-            this.tabuleiro.push([]);
-            for (let j = 0; j < 9; j++){
-                let vertice = this.grafo.addVertice(0);
-                vertice.setLoc(i, j);
-                this.tabuleiro[i].push(vertice);//inicializa o tabuleiro com valores nulos
-            }
-        }
-        for (let i = 0; i < 9; i++){//define todas as adjacências de todos os vértices inicializados
-            for (let j = 0; j < 9; j++){
-                this.defineAdj(this.tabuleiro[i][j]);
-            }
-        }
+    for (let i = 0; i < 9; i++) {
+      //define todas as adjacências de todos os vértices inicializados
+      for (let j = 0; j < 9; j++) {
+        this.defineAdj(this.tabuleiro[i][j]);
+      }
     }
-    defineAdj(vertice) {//define adjacências para um vértice
-        var linha_vertice = vertice.loc[0];
-        var coluna_vertice = vertice.loc[1];
-        var linha_bloco = Math.floor(linha_vertice / 3);
-        var coluna_bloco = Math.floor(coluna_vertice / 3);
-        var linha_min = linha_bloco * 3;
-        var coluna_min = coluna_bloco * 3;
-        var linha_max = linha_min + 3;
-        var coluna_max = coluna_min + 3;
-        for (let i of this.tabuleiro[linha_vertice]) {//Adicionando adjacência em linhas
-            if (i != vertice) {
-                this.grafo.addAresta(vertice, i);
-            }
-        }
-        //Adicionando adjacência em colunas
-        for (let i of this.tabuleiro) {
-            if (i[coluna_vertice] != vertice) {
-                this.grafo.addAresta(vertice, i[coluna_vertice]);
-            }
-        }
-        for (let i = linha_min; i < linha_max; i++) {//Adicionando adjacência em bloco ignorando os vértices já adicionados
-            for (let j = coluna_min; j < coluna_max; j++){
-                if (i == linha_vertice || j == coluna_vertice) {//Não adiciona adjacências já definidas anteriormente
-                    continue;
-                }
-                if (this.tabuleiro[i][j] != vertice) {
-                    this.grafo.addAresta(vertice, this.tabuleiro[i][j])
-                }
-            }
-        }
+  }
+  defineAdj(vertice) {
+    //define adjacências para um vértice
+    var linha_vertice = vertice.loc[0];
+    var coluna_vertice = vertice.loc[1];
+    var linha_bloco = Math.floor(linha_vertice / 3);
+    var coluna_bloco = Math.floor(coluna_vertice / 3);
+    var linha_min = linha_bloco * 3;
+    var coluna_min = coluna_bloco * 3;
+    var linha_max = linha_min + 3;
+    var coluna_max = coluna_min + 3;
+    for (let i of this.tabuleiro[linha_vertice]) {
+      //Adicionando adjacência em linhas
+      if (i != vertice) {
+        this.grafo.addAresta(vertice, i);
+      }
     }
-    colorIsValid(cor, vertice) {//se nenhum dos vertices adjacentes possui a cor, ela é válida
-        for (let x of vertice.adj) {
-            if (x.cor == cor) {
-                return false;
-            }
+    //Adicionando adjacência em colunas
+    for (let i of this.tabuleiro) {
+      if (i[coluna_vertice] != vertice) {
+        this.grafo.addAresta(vertice, i[coluna_vertice]);
+      }
+    }
+    for (let i = linha_min; i < linha_max; i++) {
+      //Adicionando adjacência em bloco ignorando os vértices já adicionados
+      for (let j = coluna_min; j < coluna_max; j++) {
+        if (i == linha_vertice || j == coluna_vertice) {
+          //Não adiciona adjacências já definidas anteriormente
+          continue;
         }
+        if (this.tabuleiro[i][j] != vertice) {
+          this.grafo.addAresta(vertice, this.tabuleiro[i][j]);
+        }
+      }
+    }
+  }
+  colorIsValid(cor, vertice) {
+    //se nenhum dos vertices adjacentes possui a cor, ela é válida
+    for (let x of vertice.adj) {
+      if (x.cor == cor) {
+        return false;
+      }
+    }
+    return true;
+  }
+  tryToColor(vertice) {
+    let cor_atual = vertice.cor;
+    for (let cor = cor_atual + 1; cor < 10; cor++) {
+      if (this.colorIsValid(cor, vertice)) {
+        vertice.setColor(cor);
         return true;
+      }
     }
-    tryToColor(vertice) {
-        let cor_atual = vertice.cor;
-        for (let cor = cor_atual + 1; cor < 10; cor++){
-            if (this.colorIsValid(cor, vertice)) {
-                vertice.setColor(cor);
-                return true;
-            }
+    return false;
+  }
+  encontraCor0() {
+    for (let linha = 0; linha < 9; linha++) {
+      for (let coluna = 0; coluna < 9; coluna++) {
+        if (this.tabuleiro[linha][coluna].cor == 0) {
+          return this.tabuleiro[linha][coluna]; //retorna o vertice cuja cor é nula
         }
-        return false;
+      }
     }
-    encontraCor0(){
-        for (let linha = 0; linha < 9; linha++) {
-            for (let coluna = 0; coluna < 9; coluna++) {
-                if (this.tabuleiro[linha][coluna].cor == 0) {
-                    return this.tabuleiro[linha][coluna];//retorna o vertice cuja cor é nula
-                }
-            }
-        }
-        return null;
+    return null;
+  }
+  backtracking() {
+    var v_livre = this.encontraCor0();
+    if (v_livre == null) {
+      //Solução completa do tabuleiro, não existem vértices livres
+      return true;
     }
-    backtracking() {
-        var v_livre = this.encontraCor0();
-        if (v_livre == null) {//Solução completa do tabuleiro, não existem vértices livres
-            return true;
-        }
-        while (this.tryToColor(v_livre)) {//tenta colorir um vértice com cor válida
-            if (this.backtracking()) {//chama recursão
-                return true;
-            }
-        }
-        v_livre.setColor(0);
-        return false;
+    while (this.tryToColor(v_livre)) {
+      //tenta colorir um vértice com cor válida
+      if (this.backtracking()) {
+        //chama recursão
+        return true;
+      }
     }
-    alteraCelula(pos_linha, pos_coluna, nova_cor) {//Tenta alterar a estrutura de um tabuleiro já carregado, caso possível
-        var vertice = this.tabuleiro[pos_linha][pos_coluna];
-        if (this.colorIsValid(nova_cor, vertice)) {
-            vertice.setColor(nova_cor);
-            return true;
-        }
-        return false;//Jogador perdeu
+    v_livre.setColor(0);
+    return false;
+  }
+  alteraCelula(pos_linha, pos_coluna, nova_cor) {
+    //Tenta alterar a estrutura de um tabuleiro já carregado, caso possível
+    var vertice = this.tabuleiro[pos_linha][pos_coluna];
+    if (this.colorIsValid(nova_cor, vertice)) {
+      vertice.setColor(nova_cor);
+      return true;
     }
+    return false; //Jogador perdeu
+  }
 }
 
 const tabuleiro = new Tabuleiro();
-iniciarTimer()
+iniciarTimer();
+
+function Celula(valor, cor) {
+  this.valor = valor;
+  this.cor = cor;
+  this.alteradoPeloUsuario = false; // novo campo
+}
 
 // Função para carregar o tabuleiro no HTML
 function carregarTabuleiro() {
-    const grid = document.getElementById("sudoku-grid");
-    for (let i = 0; i < 9; i++) {
-        const row = document.createElement("tr");
-        for (let j = 0; j < 9; j++) {
-            const cell = document.createElement("td");
-            const input = document.createElement("input");
-            input.type = "number";
-            input.min = 1;
-            input.max = 9;
-            input.maxLength = 1;
-            input.value = tabuleiro.tabuleiro[i][j].cor ? tabuleiro.tabuleiro[i][j].cor : '';
-            input.addEventListener("input", () => {
-                if (input.value.length > 1) {
-                    input.value = input.value.slice(0, 1);
-                }
-                tabuleiro.alteraCelula(i, j, parseInt(input.value) ? parseInt(input.value) : 0);
-            });
+  const grid = document.getElementById('sudoku-grid');
+  for (let i = 0; i < 9; i++) {
+    const row = document.createElement('tr');
+    for (let j = 0; j < 9; j++) {
+      const cell = document.createElement('td');
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = 1;
+      input.max = 9;
+      input.maxLength = 1;
+      input.value = tabuleiro.tabuleiro[i][j].cor
+        ? tabuleiro.tabuleiro[i][j].cor
+        : '';
 
-            if (i % 3 === 2) cell.style.borderBottom = "3px solid #e7e7e7";
-            if (j % 3 === 2) cell.style.borderRight = "3px solid #e7e7e7";
-            if (i % 3 === 0) cell.style.borderTop = "3px solid #e7e7e7";
-            if (j % 3 === 0) cell.style.borderLeft = "3px solid #e7e7e7";
-
-            cell.appendChild(input);
-            row.appendChild(cell);
+      if (tabuleiro.tabuleiro[i][j].alteradoPeloUsuario) {
+        input.classList.add('celula-alterada');
+      }
+      input.addEventListener('input', () => {
+        if (input.value.length > 1) {
+          input.value = input.value.slice(0, 1);
         }
-        grid.appendChild(row);
+        tabuleiro.alteraCelula(
+          i,
+          j,
+          parseInt(input.value) ? parseInt(input.value) : 0
+        );
+        tabuleiro.tabuleiro[i][j].alteradoPeloUsuario = true; // definir como verdadeiro
+        input.classList.add('celula-alterada'); // adicionar classe CSS
+      });
+
+      if (i % 3 === 2) cell.style.borderBottom = '3px solid #e7e7e7';
+      if (j % 3 === 2) cell.style.borderRight = '3px solid #e7e7e7';
+      if (i % 3 === 0) cell.style.borderTop = '3px solid #e7e7e7';
+      if (j % 3 === 0) cell.style.borderLeft = '3px solid #e7e7e7';
+
+      cell.appendChild(input);
+      row.appendChild(cell);
     }
+    grid.appendChild(row);
+  }
 }
 
-
 // Função para resolver o Sudoku quando o botão é clicado
-const solveButton = document.getElementById("solve-button")
-const sucessBox = document.getElementById("sucess-box")
-solveButton.addEventListener("click", () => {
-    const grid = document.getElementById("sudoku-grid");
-    while (grid.firstChild) {
-        grid.removeChild(grid.firstChild);
-    }
-    if (tabuleiro.backtracking()) {
-        carregarTabuleiro(); 
-        solveButton.classList.add('hide')
-        sucessBox.classList.remove('hide')
-        pararTimer()
-    } else {
-        alert("Não foi possível encontrar uma solução válida.");
-    }
+const solveButton = document.getElementById('solve-button');
+const sucessBox = document.getElementById('sucess-box');
+solveButton.addEventListener('click', () => {
+  const grid = document.getElementById('sudoku-grid');
+  while (grid.firstChild) {
+    grid.removeChild(grid.firstChild);
+  }
+  if (tabuleiro.backtracking()) {
+    carregarTabuleiro();
+    solveButton.classList.add('hide');
+    sucessBox.classList.remove('hide');
+    pararTimer();
+  } else {
+    alert('Não foi possível encontrar uma solução válida.');
+  }
 });
 
 // Carrega o tabuleiro no início
 tabuleiro.carregaTabuleiro();
 carregarTabuleiro();
 
-document.getElementById("reload-button").addEventListener("click", () => {
-    window.location.reload(true);
-})
+document.getElementById('reload-button').addEventListener('click', () => {
+  window.location.reload(true);
+});
