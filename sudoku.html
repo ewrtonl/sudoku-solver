@@ -7,23 +7,37 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <div class="head">
-      <a href="./index.html" class="back-button">
-        <img src="./assets/arrow-left.svg" alt="" />
-      </a>
-      <h4>sudoku</h4>
-      <div class="time">
-        <img class="clock" src="./assets/alarm.svg" alt="" />
-        <p>01:00</p>
+    <div class="main-sudoku">
+      <div class="head">
+        <a href="./index.html" class="back-button">
+          <img src="./assets/arrow-left.svg" alt="" />
+        </a>
+        <h4>sudoku</h4>
+        <div class="time">
+          <img class="clock" src="./assets/alarm.svg" alt="" />
+          <p id="tempo">00:00:00</p>
+        </div>
+      </div>
+
+      <div class="sudoku-grid" id="sudoku-grid">
+        
+      </div>
+
+      <div class="bottom-box">
+        <button id="solve-button" class="main-button">Resolver</button>
+      
+
+        <div id="sucess-box" class="sucess-box hide">
+          <h3>Sudoku resolvido com sucesso!</h3>
+
+          <button id="reload-button">
+            <img src="./assets/arrow-counter-clockwise.svg" alt="">
+          </button>
+          
+        </div>
       </div>
     </div>
 
-    <div class="sudoku-grid" id="sudoku-grid">
-      
-    </div>
-
-    <button id="solve-button">Resolver</button>
-
-    <script src="./index.js"></script>
+    <script src="./index.js" type="module"></script>
   </body>
 </html>
