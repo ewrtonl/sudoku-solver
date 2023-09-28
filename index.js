@@ -1,9 +1,11 @@
 import { iniciarTimer, pararTimer } from './timer.js';
 
+let TAM = 0
+
 class Vertice {
   constructor(cor) {
     this.loc = [-1, -1]; //posicao do vertice no tabuleiro
-    this.cor = cor; //cor [valor de 1 até 9] que ele assumirá no tabuleiro
+    this.cor = cor; //cor [valor de 1 até this.tamanho] que ele assumirá no tabuleiro
     this.adj = []; //array que armazena referências de objetos adjacentes ao vertice
   }
   setColor(cor) {
@@ -33,33 +35,41 @@ class Tabuleiro {
     this.grafo = new Grafo(); //tabuleiro possui um grafo para armazenar as relações de adjacência
     this.tabuleiro = [];
   }
+
+  setTamanho(tamanho) {
+    this.tamanho = tamanho;
+    this.blocoSize = Math.sqrt(tamanho);
+    TAM = tamanho
+  }
+
   carregaTabuleiro() {
     //cria os vertices e as relações de adjacência entre eles
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < this.tamanho; i++) {
       this.tabuleiro.push([]);
-      for (let j = 0; j < 9; j++) {
+      for (let j = 0; j < this.tamanho; j++) {
         let vertice = this.grafo.addVertice(0);
         vertice.setLoc(i, j);
         this.tabuleiro[i].push(vertice); //inicializa o tabuleiro com valores nulos
       }
     }
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < this.tamanho; i++) {
       //define todas as adjacências de todos os vértices inicializados
-      for (let j = 0; j < 9; j++) {
+      for (let j = 0; j < this.tamanho; j++) {
         this.defineAdj(this.tabuleiro[i][j]);
       }
     }
   }
+
   defineAdj(vertice) {
     //define adjacências para um vértice
     var linha_vertice = vertice.loc[0];
     var coluna_vertice = vertice.loc[1];
-    var linha_bloco = Math.floor(linha_vertice / 3);
-    var coluna_bloco = Math.floor(coluna_vertice / 3);
-    var linha_min = linha_bloco * 3;
-    var coluna_min = coluna_bloco * 3;
-    var linha_max = linha_min + 3;
-    var coluna_max = coluna_min + 3;
+    var linha_bloco = Math.floor(linha_vertice / this.blocoSize);
+    var coluna_bloco = Math.floor(coluna_vertice / this.blocoSize);
+    var linha_min = linha_bloco * this.blocoSize;
+    var coluna_min = coluna_bloco * this.blocoSize;
+    var linha_max = linha_min + this.blocoSize;
+    var coluna_max = coluna_min + this.blocoSize;
     for (let i of this.tabuleiro[linha_vertice]) {
       //Adicionando adjacência em linhas
       if (i != vertice) {
@@ -96,7 +106,7 @@ class Tabuleiro {
   }
   tryToColor(vertice) {
     let cor_atual = vertice.cor;
-    for (let cor = cor_atual + 1; cor < 10; cor++) {
+    for (let cor = cor_atual + 1; cor < this.tamanho + 1; cor++) {
       if (this.colorIsValid(cor, vertice)) {
         vertice.setColor(cor);
         return true;
@@ -105,8 +115,8 @@ class Tabuleiro {
     return false;
   }
   encontraCor0() {
-    for (let linha = 0; linha < 9; linha++) {
-      for (let coluna = 0; coluna < 9; coluna++) {
+    for (let linha = 0; linha < this.tamanho; linha++) {
+      for (let coluna = 0; coluna < this.tamanho; coluna++) {
         if (this.tabuleiro[linha][coluna].cor == 0) {
           return this.tabuleiro[linha][coluna]; //retorna o vertice cuja cor é nula
         }
@@ -139,28 +149,29 @@ class Tabuleiro {
     }
     return false; //Jogador perdeu
   }
+
+  Celula(valor, cor) {
+    this.valor = valor;
+    this.cor = cor;
+    this.alteradoPeloUsuario = false; // novo campo
+  }
 }
 
 const tabuleiro = new Tabuleiro();
+tabuleiro.setTamanho(9)
 iniciarTimer();
-
-function Celula(valor, cor) {
-  this.valor = valor;
-  this.cor = cor;
-  this.alteradoPeloUsuario = false; // novo campo
-}
 
 // Função para carregar o tabuleiro no HTML
 function carregarTabuleiro() {
   const grid = document.getElementById('sudoku-grid');
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < TAM; i++) {
     const row = document.createElement('tr');
-    for (let j = 0; j < 9; j++) {
+    for (let j = 0; j < TAM; j++) {
       const cell = document.createElement('td');
       const input = document.createElement('input');
       input.type = 'number';
       input.min = 1;
-      input.max = 9;
+      input.max = TAM;
       input.maxLength = 1;
       input.value = tabuleiro.tabuleiro[i][j].cor
         ? tabuleiro.tabuleiro[i][j].cor
