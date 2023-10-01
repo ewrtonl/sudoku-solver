@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&family=Ubuntu+Mono:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&family=Ubuntu+Mono:wght@400;700&display=swap");
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: "Josefin Sans", sans-serif;
 }
 
 body {
@@ -21,11 +21,11 @@ main {
   justify-content: center;
   align-items: center;
   gap: 40px;
-
 }
 
 h2 {
-  font-size: 30px;
+  font-size: 50px;
+  color: #1b1b1b;
 }
 
 .sudoku-box {
@@ -42,8 +42,8 @@ h2 {
 }
 
 .block-green {
-  width: 78px;
-  height: 78px;
+  width: 98px;
+  height: 98px;
   padding: 27px;
   border-radius: 5px;
   background: #9cffc9;
@@ -52,11 +52,46 @@ h2 {
 }
 
 .block-red {
-  width: 78px;
-  height: 78px;
+  width: 98px;
+  height: 98px;
   border-radius: 5px;
   background: #ffb59c;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+}
+
+.buttons-box {
+  display: flex;
+  gap: 10px;
+  text-align: center;
+}
+
+.buttons-box button {
+  background: none;
+  border: none;
+  font-size: 19px;
+  font-weight: 400;
+  color: #ffff;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.buttons-box a {
+  padding: 15px;
+  width: 100px;
+  text-decoration: none;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
+  transition: .2s;
+  background-color: rgba(255, 255, 255, .2);
+}
+
+.buttons-box a:hover {
+  transform: scale(1.05);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
 .main-button {
@@ -121,11 +156,9 @@ h2 {
   text-align: center;
 }
 
-
 table {
   border-collapse: collapse;
   margin: 0 auto;
-  
 }
 
 table td {
@@ -138,23 +171,21 @@ table td {
 }
 
 input {
-  font-family: 'Ubuntu Mono', monospace;
+  font-family: "Ubuntu Mono", monospace;
   border: none;
   text-align: center;
-  font-size: 23px;
-  padding: 14px;
-  margin: 1px;
+  margin: 0.5px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
-  rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
-  transition: .3s;
+  transition: 0.3s;
 }
 
-input[type='number']::-webkit-inner-spin-button {
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
@@ -163,7 +194,6 @@ input:hover {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
     rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-
 }
 
 input:focus {
@@ -187,7 +217,7 @@ input:focus {
   align-items: center;
   justify-content: space-evenly;
   color: #ffff;
-  background-color: rgb(255, 255, 255, .1);
+  background-color: rgb(255, 255, 255, 0.1);
   padding: 15px;
   border-radius: 15px;
   gap: 5px;
@@ -199,7 +229,7 @@ input:focus {
   background: none;
   border: none;
 
-  transition: .3s;
+  transition: 0.3s;
   cursor: pointer;
 }
 
