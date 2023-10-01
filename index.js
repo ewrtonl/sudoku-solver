@@ -1,6 +1,10 @@
-import { iniciarTimer, pararTimer } from './timer.js';
+import { iniciarTimer, pararTimer } from "./timer.js";
 
-let TAM = 0
+let TAM = 0;
+let blocoTAM = 0
+
+var urlParams = new URLSearchParams(window.location.search);
+var sudokuTAM = parseInt(urlParams.get('sudoku'));
 
 class Vertice {
   constructor(cor) {
@@ -39,7 +43,8 @@ class Tabuleiro {
   setTamanho(tamanho) {
     this.tamanho = tamanho;
     this.blocoSize = Math.sqrt(tamanho);
-    TAM = tamanho
+    TAM = tamanho;
+    blocoTAM = this.blocoSize
   }
 
   carregaTabuleiro() {
@@ -158,31 +163,31 @@ class Tabuleiro {
 }
 
 const tabuleiro = new Tabuleiro();
-tabuleiro.setTamanho(9)
+tabuleiro.setTamanho(sudokuTAM);
 iniciarTimer();
 
 // Função para carregar o tabuleiro no HTML
 function carregarTabuleiro() {
-  const grid = document.getElementById('sudoku-grid');
+  const grid = document.getElementById("sudoku-grid");
   for (let i = 0; i < TAM; i++) {
-    const row = document.createElement('tr');
+    const row = document.createElement("tr");
     for (let j = 0; j < TAM; j++) {
-      const cell = document.createElement('td');
-      const input = document.createElement('input');
-      input.type = 'number';
+      const cell = document.createElement("td");
+      const input = document.createElement("input");
+      input.type = "number";
       input.min = 1;
       input.max = TAM;
       input.maxLength = 1;
       input.value = tabuleiro.tabuleiro[i][j].cor
         ? tabuleiro.tabuleiro[i][j].cor
-        : '';
+        : "";
 
       if (tabuleiro.tabuleiro[i][j].alteradoPeloUsuario) {
-        input.classList.add('celula-alterada');
+        input.classList.add("celula-alterada");
       }
-      input.addEventListener('input', () => {
-        if (input.value.length > 1) {
-          input.value = input.value.slice(0, 1);
+      input.addEventListener("input", () => {
+        if (input.value.length > 2) {
+          input.value = input.value.slice(0, 2);
         }
         tabuleiro.alteraCelula(
           i,
@@ -190,13 +195,26 @@ function carregarTabuleiro() {
           parseInt(input.value) ? parseInt(input.value) : 0
         );
         tabuleiro.tabuleiro[i][j].alteradoPeloUsuario = true; // definir como verdadeiro
-        input.classList.add('celula-alterada'); // adicionar classe CSS
+        input.classList.add("celula-alterada"); // adicionar classe CSS
       });
 
-      if (i % 3 === 2) cell.style.borderBottom = '3px solid #e7e7e7';
-      if (j % 3 === 2) cell.style.borderRight = '3px solid #e7e7e7';
-      if (i % 3 === 0) cell.style.borderTop = '3px solid #e7e7e7';
-      if (j % 3 === 0) cell.style.borderLeft = '3px solid #e7e7e7';
+      if (sudokuTAM === 9) {
+        input.style.padding = '13px'
+        input.style.fontSize = '23px'
+      }
+      else if (sudokuTAM === 16) {
+        input.style.padding = '7px'
+        input.style.fontSize = '15px'
+      }
+      else {
+        input.style.padding = '1px'
+        input.style.fontSize = '10px'
+      }
+
+      cell.style.borderBottom = "1px solid #e7e7e7";
+      cell.style.borderRight = "1px solid #e7e7e7";
+      if (i % blocoTAM === 0) cell.style.borderTop = "3px solid #e7e7e7";
+      if (j % blocoTAM === 0) cell.style.borderLeft = "3px solid #e7e7e7";
 
       cell.appendChild(input);
       row.appendChild(cell);
@@ -206,20 +224,20 @@ function carregarTabuleiro() {
 }
 
 // Função para resolver o Sudoku quando o botão é clicado
-const solveButton = document.getElementById('solve-button');
-const sucessBox = document.getElementById('sucess-box');
-solveButton.addEventListener('click', () => {
-  const grid = document.getElementById('sudoku-grid');
+const solveButton = document.getElementById("solve-button");
+const sucessBox = document.getElementById("sucess-box");
+solveButton.addEventListener("click", () => {
+  const grid = document.getElementById("sudoku-grid");
   while (grid.firstChild) {
     grid.removeChild(grid.firstChild);
   }
   if (tabuleiro.backtracking()) {
     carregarTabuleiro();
-    solveButton.classList.add('hide');
-    sucessBox.classList.remove('hide');
+    solveButton.classList.add("hide");
+    sucessBox.classList.remove("hide");
     pararTimer();
   } else {
-    alert('Não foi possível encontrar uma solução válida.');
+    alert("Não foi possível encontrar uma solução válida.");
   }
 });
 
@@ -227,6 +245,6 @@ solveButton.addEventListener('click', () => {
 tabuleiro.carregaTabuleiro();
 carregarTabuleiro();
 
-document.getElementById('reload-button').addEventListener('click', () => {
+document.getElementById("reload-button").addEventListener("click", () => {
   window.location.reload(true);
 });
