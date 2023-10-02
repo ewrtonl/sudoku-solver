@@ -198,6 +198,13 @@ function carregarTabuleiro() {
         input.classList.add("celula-alterada"); // adicionar classe CSS
       });
 
+      input.addEventListener("blur", () => {
+        if (!input.value) {
+          tabuleiro.tabuleiro[i][j].alteradoPeloUsuario = false;
+          input.classList.remove("celula-alterada");
+        }
+      });
+
       if (sudokuTAM === 9) {
         input.style.padding = '13px'
         input.style.fontSize = '23px'
